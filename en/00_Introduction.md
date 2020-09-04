@@ -48,9 +48,15 @@ for a great introduction of computer graphics concepts. Some other great compute
 You can use C instead of C++ if you want, but you will have to use a different
 linear algebra library and you will be on your own in terms of code structuring.
 We will use C++ features like classes and RAII to organize logic and resource
-lifetimes. There is also an [alternative version](https://github.com/bwasty/vulkan-tutorial-rs) of this tutorial available for Rust developers.
+lifetimes. There is also an [alternative version](https://github.com/bwasty/vulkan-tutorial-rs)
+of this tutorial available for Rust developers.
 
-To make it easier to follow along for developers using other programming languages, and to get some experience with the base API we'll be using the original C API to work with Vulkan. If you are using C++, however, you may prefer using the newer [Vulkan-Hpp](https://github.com/KhronosGroup/Vulkan-Hpp) bindings that abstract some of the dirty work and help prevent certain classes of errors.
+To make it easier to follow along for developers using other programming
+languages, and to get some experience with the base API we'll be using the
+original C API to work with Vulkan. If you are using C++, however, you may
+prefer using the newer [Vulkan-Hpp](https://github.com/KhronosGroup/Vulkan-Hpp)
+bindings that abstract some of the dirty work and help prevent certain classes
+of errors.
 
 ## E-book
 
@@ -68,7 +74,8 @@ will make more sense after you've understood their basic role in the whole
 picture. Next, we'll set up the development environment with the [Vulkan SDK](https://lunarg.com/vulkan-sdk/),
 the [GLM library](http://glm.g-truc.net/) for linear algebra operations and
 [GLFW](http://www.glfw.org/) for window creation. The tutorial will cover how
-to set these up on Windows with Visual Studio, and on Ubuntu Linux with GCC.
+to set these up on Windows with Visual Studio, on macOS with Xcode and on Ubuntu
+Linux with GCC.
 
 After that we'll implement all of the basic components of a Vulkan program that
 are necessary to render your first triangle. Each chapter will follow roughly
