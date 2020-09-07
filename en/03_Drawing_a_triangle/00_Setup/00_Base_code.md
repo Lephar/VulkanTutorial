@@ -62,8 +62,8 @@ the resources we've used in the `cleanup` function.
 
 If any kind of fatal error occurs during execution then we'll throw a
 `std::runtime_error` exception with a descriptive message, which will propagate
-back to the `main` function and be printed to the command prompt. To handle 
-a variety of standard exception types as well, we catch the more general `std::exception`. One example of an error that we will deal with soon is finding 
+back to the `main` function and be printed to the command prompt. To handle
+a variety of standard exception types as well, we catch the more general `std::exception`. One example of an error that we will deal with soon is finding
 out that a certain required extension is not supported.
 
 Roughly every chapter that follows after this one will add one new function that
@@ -74,8 +74,8 @@ private class members that need to be freed at the end in `cleanup`.
 
 Just like each chunk of memory allocated with `malloc` requires a call to
 `free`, every Vulkan object that we create needs to be explicitly destroyed when
-we no longer need it. In C++ it is possible to perform automatic resource 
-management using [RAII](https://en.wikipedia.org/wiki/Resource_Acquisition_Is_Initialization) 
+we no longer need it. In C++ it is possible to perform automatic resource
+management using [RAII](https://en.wikipedia.org/wiki/Resource_Acquisition_Is_Initialization)
 or smart pointers provided in the `<memory>` header. However, I've chosen to be
 explicit about allocation and deallocation of Vulkan objects in this tutorial.
 After all, Vulkan's niche is to be explicit about every operation to avoid
@@ -85,7 +85,7 @@ the API works.
 After following this tutorial, you could implement automatic resource management
 by writing C++ classes that acquire Vulkan objects in their constructor and
 release them in their destructor, or by providing a custom deleter to either
-`std::unique_ptr` or `std::shared_ptr`, depending on your ownership requirements. 
+`std::unique_ptr` or `std::shared_ptr`, depending on your ownership requirements.
 RAII is the recommended model for larger Vulkan programs, but
 for learning purposes it's always good to know what's going on behind the
 scenes.
