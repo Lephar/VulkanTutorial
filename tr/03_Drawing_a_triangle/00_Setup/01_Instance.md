@@ -1,12 +1,11 @@
-## Creating an instance
+## Instance oluşturma
 
-The very first thing you need to do is initialize the Vulkan library by creating
-an *instance*. The instance is the connection between your application and the
-Vulkan library and creating it involves specifying some details about your
-application to the driver.
+İlk yapacağınız şey bir *instance* oluşturarak Vulkan kütüphanesini hazırlamak
+olmalı. Instance sizin uygulamanızla Vulkan arasındaki bağlantıdır, oluşturmak
+için de uygulamanız hakkında sürücüye birkaç bilgi verilmesi gerekiyor.
 
-Start by adding a `createInstance` function and invoking it in the
-`initVulkan` function.
+Bir `createInstance` fonksiyonu oluşturup `initVulkan` içerisinde çağırarak
+başlayalım.
 
 ```c++
 void initVulkan() {
@@ -14,18 +13,17 @@ void initVulkan() {
 }
 ```
 
-Additionally add a data member to hold the handle to the instance:
+Ayrıca instance tutmak için sınıfa bir değişken ekleyelim:
 
 ```c++
 private:
 VkInstance instance;
 ```
 
-Now, to create an instance we'll first have to fill in a struct with some
-information about our application. This data is technically optional, but it may
-provide some useful information to the driver in order to optimize our specific
-application (e.g. because it uses a well-known graphics engine with
-certain special behavior). This struct is called `VkApplicationInfo`:
+Şimdi instance oluşturmak için bir struct dolduracağız, uygulamamızla ilgili
+bilgileri gireceğiz. Bu bilgiler opsiyonel ama sürücüye optimizasyon için
+faydalı bilgiler sağlayabilir, mesela özel davranışlara sahip bilindik bir
+grafik motoru kullanıyor olabiliriz. Bu struct `VkApplicationInfo`:
 
 ```c++
 void createInstance() {
@@ -39,17 +37,17 @@ void createInstance() {
 }
 ```
 
-As mentioned before, many structs in Vulkan require you to explicitly specify
-the type in the `sType` member. This is also one of the many structs with a
-`pNext` member that can point to extension information in the future. We're
-using value initialization here to leave it as `nullptr`.
+Daha önceden de bahsettiğimiz gibi Vulkan'daki çoğu structın `sType` değişkenine
+elle değer atamamız gerekiyor. Bu ayrıca `pNext` alanına sahip birçok structtan
+biri, ileride bir uzantı verisi tutabilir ama biz bunu `nullptr` olarak
+bırakacağız.
 
-A lot of information in Vulkan is passed through structs instead of function
-parameters and we'll have to fill in one more struct to provide sufficient
-information for creating an instance. This next struct is not optional and tells
-the Vulkan driver which global extensions and validation layers we want to use.
-Global here means that they apply to the entire program and not a specific
-device, which will become clear in the next few chapters.
+Vulkan'da çoğu bilgi, fonksiyon parametreleriyle değil structlar ile gönderilir.
+Şimdi bir struct daha dolduracağız, instance oluşturmak için gerekli bilgileri
+içerecek. Bu seferki opsiyonel değil ve Vulkan sürücüsüne hangi global
+uzantılarla hangi doğrulama katmanlarını kullanacağımızı söyleyecek. Burada
+globalden kasıt, bu uzantıların tüm programa etki edecek olması, sadece belli
+bir cihaza değil. Bir sonraki kısımda daha da netleşecek.
 
 ```c++
 VkInstanceCreateInfo createInfo{};
@@ -57,11 +55,11 @@ createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 createInfo.pApplicationInfo = &appInfo;
 ```
 
-The first two parameters are straightforward. The next two layers specify the
-desired global extensions. As mentioned in the overview chapter, Vulkan is a
-platform agnostic API, which means that you need an extension to interface with
-the window system. GLFW has a handy built-in function that returns the
-extension(s) it needs to do that which we can pass to the struct:
+İlk iki parametre gayet net. Sonraki iki katman istenen global uzantıları
+belirtecek. Genel bakış bölümünde değindiğimiz gibi, Vulkan platformdan bağımsız
+bir API ve pencere yöneticisiyle haberleşmesi için bir uzantıya ihtiyacı var.
+GLFW kullanışlı bir gömülü uzantı fonksiyonuyla gelmekte, structa
+kaydedebilmemiz için gerekli uzantıları bize döndürebilir:
 
 ```c++
 uint32_t glfwExtensionCount = 0;
@@ -73,33 +71,33 @@ createInfo.enabledExtensionCount = glfwExtensionCount;
 createInfo.ppEnabledExtensionNames = glfwExtensions;
 ```
 
-The last two members of the struct determine the global validation layers to
-enable. We'll talk about these more in-depth in the next chapter, so just leave
-these empty for now.
+Structın son iki değişkeni, etkinleştirilecek global doğrulama katmanlarını
+belirleyecek. Bunlara bir sonraki bölümde ayrıntılı değineceğimiz için şimdilik
+boş bırakacağız.
 
 ```c++
 createInfo.enabledLayerCount = 0;
 ```
 
-We've now specified everything Vulkan needs to create an instance and we can
-finally issue the `vkCreateInstance` call:
+Vulkan'ın instance oluşturması için gerekli her şeyi tanımladığımıza göre artık
+`vkCreateInstance` fonksiyonunu çağırabiliriz:
 
 ```c++
 VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
 ```
 
-As you'll see, the general pattern that object creation function parameters in
-Vulkan follow is:
+Gördüğünüz gibi Vulkan'daki nesne oluşturma fonksiyonlarının parametreleri
+genelde şu kalıpta:
 
-* Pointer to struct with creation info
-* Pointer to custom allocator callbacks, always `nullptr` in this tutorial
-* Pointer to the variable that stores the handle to the new object
+* Oluşturma bilgisini içeren structa bir pointer
+* Kendi yer ayırıcı callback fonksiyonumuza bir pointer, bu derslerde hep `nullptr`
+* Yeni oluşturulan objenin işleyicisini tutan değişkene bir pointer
 
-If everything went well then the handle to the instance was stored in the
-`VkInstance` class member. Nearly all Vulkan functions return a value of type
-`VkResult` that is either `VK_SUCCESS` or an error code. To check if the
-instance was created successfully, we don't need to store the result and can
-just use a check for the success value instead:
+Eğer her şey yolunda gittiyse şu anda `VkInstance` elemanında instance
+işleyicisi tutuluyor olmalı. Neredeyse tüm Vulkan fonksiyonları, değeri
+`VK_SUCCESS` veya bir hata kodu olan, `VkResult` tipinde bir sonuç döndürür.
+Instance oluşturmanın sonucunu kontrol etmek için sonuçu tutmamıza gerek yok,
+sadece başarı değişkeniyle karşılaştırabiliriz:
 
 ```c++
 if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
@@ -107,47 +105,49 @@ if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
 }
 ```
 
-Now run the program to make sure that the instance is created successfully.
+Şimdi düzgünce instance oluşturulduğundan emin olmak için programınızı
+çalıştırın.
 
-## Checking for extension support
+## Uzantı desteği kontrolü
 
-If you look at the `vkCreateInstance` documentation then you'll see that one of
-the possible error codes is `VK_ERROR_EXTENSION_NOT_PRESENT`. We could simply
-specify the extensions we require and terminate if that error code comes back.
-That makes sense for essential extensions like the window system interface, but
-what if we want to check for optional functionality?
+Eğer `vkCreateInstance` dökümantasyonuna bakarsanız muhtemelen hatalar arasında
+`VK_ERROR_EXTENSION_NOT_PRESENT` (uzantı mevcut değil) diye bir hata kodu
+göreceksiniz. Uzantıyı her türlü isteyip eğer bu hatayla karşılaşırsak programı
+kapatabiliriz. Pencere sistemi gibi gerekli uzantılar için bu mantıklı bir
+yöntem. Peki ya opsiyonel bir özellik sağlayacak uzantıların varlığını kontrol
+etmek istersek?
 
-To retrieve a list of supported extensions before creating an instance, there's
-the `vkEnumerateInstanceExtensionProperties` function. It takes a pointer to a
-variable that stores the number of extensions and an array of
-`VkExtensionProperties` to store details of the extensions. It also takes an
-optional first parameter that allows us to filter extensions by a specific
-validation layer, which we'll ignore for now.
+Instance oluşturmadan, desteklenen uzantıların listesini çekebilmek için
+`vkEnumerateInstanceExtensionProperties` fonksiyonu mevcut. Bu fonksiyon
+parametre olarak, desteklenen uzantı sayısını tutacak değişkene ve uzantıların
+detaylarını tutacak bir `VkExtensionProperties` dizisine pointer alıyor. İlk
+parametre de  desteklenen uzantıları, doğrulama katmanlarına göre filtreleme
+yapmamızı sağlıyor ancak bunu şimdilik yok sayacağız.
 
-To allocate an array to hold the extension details we first need to know how
-many there are. You can request just the number of extensions by leaving the
-latter parameter empty:
+Uzantı detaylarını tutacak diziyi oluşturmadan önce kaç uzantı olduğunu bilmemiz
+gerekli. Son parametreyi boş bırakarak sadece uzantı sayısını sorgulayabiliriz:
 
 ```c++
 uint32_t extensionCount = 0;
 vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
 ```
 
-Now allocate an array to hold the extension details (`include <vector>`):
+Şimdi uzantı detaylarını tutacak diziye yer ayırmak için `#include <vector>`
+satırını ve aşaıdaki kod parçasını ekleyin:
 
 ```c++
 std::vector<VkExtensionProperties> extensions(extensionCount);
 ```
 
-Finally we can query the extension details:
+Sonunda uzantı detaylarını sorgulayabiliriz:
 
 ```c++
 vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
 ```
 
-Each `VkExtensionProperties` struct contains the name and version of an
-extension. We can list them with a simple for loop (`\t` is a tab for
-indentation):
+Her `VkExtensionProperties` structı, bir uzantının ismini ve versiyonunu içerir.
+Hepsini basit bir for döngüsü ile listeleyebiliriz (`\t` tab karakteriyle
+hizalamak için):
 
 ```c++
 std::cout << "available extensions:\n";
@@ -157,16 +157,16 @@ for (const auto& extension : extensions) {
 }
 ```
 
-You can add this code to the `createInstance` function if you'd like to provide
-some details about the Vulkan support. As a challenge, try to create a function
-that checks if all of the extensions returned by
-`glfwGetRequiredInstanceExtensions` are included in the supported extensions
-list.
+Vulkan desteğiyle ilgili daha fazla bilgi vermek isterseniz bu kodu
+`createInstance` fonksiyonuna ekleyebilirsiniz. Kendinizi denemek için
+`glfwGetRequiredInstanceExtensions` fonksiyonundan dönen tüm uzantıların,
+desteklenen uzantılar arasında olup olmadığını test eden bir fonksiyon yazmaya
+çalışın.
 
-## Cleaning up
+## Temizlik
 
-The `VkInstance` should be only destroyed right before the program exits. It can
-be destroyed in `cleanup` with the `vkDestroyInstance` function:
+`VkInstance`, tam programdan çıkmadan önce yok edilmeli. `cleanup` fonksiyonunun
+içinde `vkDestroyInstance` fonksiyonu kullanılarak yok edilebilir:
 
 ```c++
 void cleanup() {
@@ -178,13 +178,13 @@ void cleanup() {
 }
 ```
 
-The parameters for the `vkDestroyInstance` function are straightforward. As
-mentioned in the previous chapter, the allocation and deallocation functions
-in Vulkan have an optional allocator callback that we'll ignore by passing
-`nullptr` to it. All of the other Vulkan resources that we'll create in the
-following chapters should be cleaned up before the instance is destroyed.
+`vkDestroyInstance` fonksiyonunun parametreleri gayet açıklayıcı. Önceki bölümde
+bahsettiğimiz gibi Vulkan'daki yer ayırma ve yeri boşaltma fonksiyonları
+opsiyonel bir yer ayırıcı callback parametresine sahip. Her zamanki gibi bunu
+yok sayıp `nullptr` göndereceğiz. Sonraki bölümlerde oluşturacağımız diğer tüm
+Vulkan kaynakları, instance yok edilmeden önce temizlenmeli.
 
-Before continuing with the more complex steps after instance creation, it's time
-to evaluate our debugging options by checking out [validation layers](!en/Drawing_a_triangle/Setup/Validation_layers).
+Instance oluşturduktan sonraki karmaşık adımlara geçmeden önce, [doğrulama katmanlarına](!en/Drawing_a_triangle/Setup/Validation_layers)
+göz atıp hata ayıklama seçeneklerimizi incelemenin tam zamanı!
 
-[C++ code](/code/01_instance_creation.cpp)
+[C++ kodu](/code/01_instance_creation.cpp)
