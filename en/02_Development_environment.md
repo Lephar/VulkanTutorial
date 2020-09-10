@@ -342,11 +342,13 @@ place it back for release builds.
 Similarly, define the linker flags in a `LDFLAGS` variable:
 
 ```make
-LDFLAGS = -lglfw -lvulkan -ldl -lpthread
+LDFLAGS = -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 ```
 
 The flag `-lglfw` is for GLFW, `-lvulkan` links with the Vulkan function loader
-and the remaining flags are low-level system libraries that GLFW needs.
+and the remaining flags are low-level system libraries that GLFW needs. The
+remaining flags are dependencies of GLFW itself: the threading and window
+management.
 
 Specifying the rule to compile `VulkanTest` is straightforward now. Make sure to
 use tabs for indentation instead of spaces.
@@ -380,7 +382,7 @@ complete makefile that resembles the following:
 
 ```make
 CFLAGS = -std=c++17 -O2
-LDFLAGS = -lglfw -lvulkan -ldl -lpthread
+LDFLAGS = -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 
 VulkanTest: main.cpp
     g++ $(CFLAGS) -o VulkanTest main.cpp $(LDFLAGS)

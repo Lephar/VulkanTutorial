@@ -355,11 +355,12 @@ ama yayınlanacak (release) hali için tekrar açmayı unutmayın.
 Benzer şekilde linker parametreleri için `LDFLAGS` değişkenini tanımlayın:
 
 ```make
-LDFLAGS = -lglfw -lvulkan -ldl -lpthread
+LDFLAGS = -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 ```
 
-`-lglfw` GLFW için, `-lvulkan` Vulkan yükleyicisini bağlıyor ve geri kalanı da
-GLFW için düşük seviye sistem kütüphaneleri.
+`-lglfw` GLFW için, `-lvulkan` Vulkan yükleyicisini bağlıyor.
+Geri kalanı da GLFW'nin gereksinimleri olan alt seviye sistem kütüphaneleri:
+çoklu iş parçacığı ve pencere yöneticisi.
 
 `VulkanTest`'i derleyecek kural şimdi gayet basitçe yazılabilir. Yalnız satır
 başlarında boşluklar için boşluk karakteri yerine tab karakteri kullandığınızdan
