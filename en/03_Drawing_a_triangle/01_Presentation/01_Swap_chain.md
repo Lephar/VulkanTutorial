@@ -82,7 +82,7 @@ the extension does have to be explicitly enabled.
 
 ## Enabling device extensions
 
-Using a swapchain requires enabling the `VK_KHR_swapchain` extension first.
+Using a swap chain requires enabling the `VK_KHR_swapchain` extension first.
 Enabling the extension just requires a small change to the logical device
 creation structure:
 
