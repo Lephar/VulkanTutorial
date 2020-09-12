@@ -48,7 +48,7 @@ genel bir bakış ile başlayacağız. Tüm bu kavramların üzerinden ilgili b�
 ayrıntılı olarak geçilecek. Bu kısım sadece, parçaların bütündeki bağlantılarını
 kurabilmeniz için var.
 
-### 1. adım - Instance oluşturma ve fiziksel aygıt seçimi
+### 1. Adım - Instance oluşturma ve fiziksel aygıt seçimi
 
 Her Vulkan uygulaması `VkInstance` aracılığıyla Vulkan API'ını kurarak başlar.
 Instance, uygulamanızı betimleyerek ve gereken uzantıları (extensions)
@@ -59,7 +59,7 @@ sorgulatarak ileriki işlemlerde kullanmak üzere bir veya birden fazla
 verebilirsiniz. Örneğin sadece harici ekran kartını kullanmayı tercih
 edebilirsiniz.
 
-### 2. adım - Mantıksal aygıt ve kuyruk aileleri
+### 2. Adım - Mantıksal aygıt ve kuyruk aileleri
 
 Gerekli donanımı seçtikten sonra bir `VkDevice` (mantıksal aygıt) oluşturmamız
 gerekiyor. Çoklu görüntü kapısı (multi viewport) ve 64 bit noktalı sayılar gibi
@@ -75,7 +75,7 @@ etken olabilir. Vulkan destekli bir donanımın hiç grafik işlevine sahip olma
 gayet muhtemel. Ancak günümüzdeki neredeyse tüm Vulkan destekli grafik kartları
 bizim ilgilendiğimiz kuyruk işlemlerini desteklemekte.
 
-### 3. adım - Pencere yüzeyi ve takas zinciri
+### 3. Adım - Pencere yüzeyi ve takas zinciri
 
 Eğer sadece ekran dışı çizimlerle ilgilenmiyorsanız, çizilen kareleri sunmak
 için bir pencere (window) oluşturmanız gerekiyor. Pencereler kullandığınız
@@ -110,7 +110,7 @@ Bazı platformlar araya hiç pencere yöneticisi sokmadan `VK_KHR_display` ve
 vermekte. Bu size tüm ekranı içeren bir çizim yüzeyi oluşturma şansı tanır.
 Örnek olarak kendi pencere yöneticinizi yazmak için bunları kullanabilirsiniz.
 
-### 4. adım - Resim görünümleri and kare arabellekleri
+### 4. Adım - Resim görünümleri and kare arabellekleri
 
 Takas zincirinden alınan bir kareyi çizebilmek için bunu bir `VkImageView`
 (resim görünümü) ve `VkFramebuffer` (kare arabelleği) içine sarmamız gerekmekte.
@@ -120,7 +120,7 @@ kullanılacak resim görüntülerine referans verir. Takas zincirinde birden faz
 resim olabileceğinden, hepsi için birer tane resim görünümü ve kare arabelleğini
 önceden oluşturup, zamanı geldiğinde doğru olanı seçip ekranda göstereceğiz.
 
-### 5. adım - Çizim geçişleri
+### 5. Adım - Çizim geçişleri
 
 Vulkan'da çizim geçişleri (render passes), çizim işlemleri sırasında
 kullanacağımız resimlerin türlerinin, nasıl kullanılacaklarının ve içeriklerine
@@ -130,7 +130,7 @@ hemen önce bu resmin düz bir renk ile temizleneceğini söyleyeceğiz. Çizim 
 sadece resimlerin türlerini belirleyecek, bu resimleri gerekli yerlere asıl
 bağlama işlemini `VkFramebuffer` gerçekleştirecek.
 
-### 6. adım - Grafik boru hattı
+### 6. Adım - Grafik boru hattı
 
 Vulkan'da grafik boru hattı, bir `VkPipeline` nesnesi oluşturularak kurulur.
 Ekran kartının yapılandırılabilir durumları burada belirlenir. Görüntü kapısı
@@ -156,7 +156,7 @@ yapmak gibi önemli durum değişiklikleri önceden net bir şekilde belirtildi�
 için sürücüye daha fazla optimizasyon fırsatı sağlıyoruz ve çalışma zamanı
 performansımız daha tahmin edilebilir oluyor.
 
-### 7. adım - Komut havuzları ve komut arabellekleri
+### 7. Adım - Komut havuzları ve komut arabellekleri
 
 Daha önceden de bahsettiğimiz gibi, çizim işlemleri gibi Vulkan'da yapmak
 istediğimiz birçok operasyonu önceden bir kuyruğa yollamamız gerekiyor. Bu
@@ -177,7 +177,7 @@ zamanında bunlardan doğru olanını seçmemiz gerekmekte. Bir diğer yöntem d
 ekrana çizilecek her kare için komut arabelleğini baştan kaydetmek olurdu ki,
 bu hiç verimli bir yöntem değil.
 
-### 8. adım - Ana döngü
+### 8. Adım - Ana döngü
 
 Çizim komutlarımızı komut arabelleklerine kaydettikten sonra ana döngümüz gayet
 basit görünüyor. İlk olarak `vkAcquireNextImageKHR` (sıradaki resmi getir)
