@@ -70,8 +70,8 @@ createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
 createInfo.format = swapChainImageFormat;
 ```
 
-`components` alanı, renk kanallarını düzenlemenizi sağlar. Örneğin tek renkli
-(monochrome) bir doku için tüm renk kanallarını kırmızı kanalına
+`components` alanı, renk kanallarını dönüştürmemizi (swizzle) sağlar. Örneğin
+tek renkli (monochrome) bir doku için tüm renk kanallarını kırmızı kanalına
 bağlayabilirsiniz. Ayrıca bir kanalı `0` ve `1` sabitlerine eşleyebilirsiniz.
 Bizim durumumuzda varsayılan eşleme kullanılacak.
 
