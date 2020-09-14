@@ -47,10 +47,10 @@ yapılmasına izin verir ama nasıl çalıştıkları önceden belirlenmiştir.
 
 Turuncu renkliler ise `programlanabilir` aşamalardır. Grafik kartına kendi
 kodunuzu yükleyerek tam olarak istediğiniz işlemleri yapmanıza izin verir. Bu,
-örnek olarak parçacık gölgelendirici kullanarak doku geçirme ve ışıklandırmadan
-ışın takibine kadar her şeyi yapmanıza olanak sağlar. Bu programlar birçok GPU
-çekirdeğinde eş zamanları çalışarak köşeler ve parçacıklar gibi birçok objeyi
-aynı anda işler.
+örnek olarak, parçacık gölgelendirici kullanarak doku geçirme ve
+ışıklandırmadan, ışın takibine kadar her şeyi yapmanıza olanak sağlar. Bu
+programlar birçok GPU çekirdeğinde eş zamanları çalışarak köşeler ve parçacıklar
+gibi birçok objeyi aynı anda işler.
 
 Önceden OpenGL ve Direct3D gibi eski API'ları kullandıysanız `glBlendFunc` ve
 `OMSetBlendState` gibi çağrılarla her türlü boru hattı ayarını değiştirmeye

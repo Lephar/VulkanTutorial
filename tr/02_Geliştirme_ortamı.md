@@ -38,9 +38,9 @@ bölümüne bakabilirsiniz.
 
 Bu klasörde geliştirme süresince işimize yarayacak bir program daha mevcut.
 `glslangValidator.exe` ve `glslc.exe` programları, insan tarafından okunabilir
-[GLSL](https://en.wikipedia.org/wiki/OpenGL_Shading_Language) gölgeleyici
+[GLSL](https://en.wikipedia.org/wiki/OpenGL_Shading_Language) gölgelendirici
 kodlarını, bayt koduna derlemek için kullanılacak. Bunlara ayrıntılı bir şekilde
-[gölgeleyici modülleri](!en/Drawing_a_triangle/Graphics_pipeline_basics/Shader_modules)
+[gölgelendirici modülleri](!en/Drawing_a_triangle/Graphics_pipeline_basics/Shader_modules)
 bölümünde değineceğiz. `Bin` klasörü ayrıca Vulkan yükleyicisi ve doğrulama
 katmanlarının binary dosyalarını içerirken, `Lib` klasörü de kütüphane
 dosyalarını içermekte.
@@ -268,11 +268,11 @@ sudo apt install libglm-dev
 ### Shader Compiler
 
 İnsan tarafından okunabilir [GLSL](https://en.wikipedia.org/wiki/OpenGL_Shading_Language)
-gölgeleyici kodlarını, bayt koduna derlemek için kullanılacak olan programlar
+gölgelendirici kodlarını, bayt koduna derlemek için kullanılacak olan programlar
 dışında hemen hemen her şeyimiz hazır.
 
-En popüler iki gölgeleyici derleyicisi Khronos Grup'un `glslangValidator`'ı ve
-Google'ın `glslc` programı. İkincisi GCC ve Clang benzeri bir kullanıma sahip
+En popüler iki gölgelendirici derleyicisi Khronos Grup'un `glslangValidator`'ı
+ve Google'ın `glslc` programı. İkincisi GCC ve Clang benzeri bir kullanıma sahip
 olduğundan bunu kullanacağız. Google'ın [resmi olmayan binary dosyalarını](https://github.com/google/shaderc/blob/main/downloads.md)
 indirin ve `glslc` dosyasını `/usr/local/bin` klasörünüze taşıyın. Yetkilerinize
 göre `sudo` komutuna ihtiyacınız olabileceğini unutmayın. `glslc` komutunu
@@ -281,7 +281,7 @@ olarak hata verecektir:
 
 `glslc: error: no input files`
 
-`glslc` ile ilgili ayrıntılara [gölgeleyici modülleri](!en/Drawing_a_triangle/Graphics_pipeline_basics/Shader_modules)
+`glslc` ile ilgili ayrıntılara [gölgelendirici modülleri](!en/Drawing_a_triangle/Graphics_pipeline_basics/Shader_modules)
 kısmında değineceğiz.
 
 ### Makefile projesi oluşturma

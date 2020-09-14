@@ -106,7 +106,7 @@ Cihazlardan sorgulanabilecek daha farklı özellikler de var. Cihaz belleği ve
 kuyruk aileleriyle ilgili bölümlerde tartışacağız (bir sonraki kısma
 bakabilirsiniz).
 
-Örnek olarak diyelim ki uygulamamızın sadece geometri gölgeleyicilerini
+Örnek olarak diyelim ki uygulamamızın sadece geometri gölgelendirici
 (geometry shaders) destekleyen harici bir ekran kartında çalışmasını istiyoruz.
 `isDeviceSuitable` fonksiyonumuz şöyle olurdu:
 

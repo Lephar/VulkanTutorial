@@ -64,7 +64,7 @@ queueCreateInfo.pQueuePriorities = &queuePriority;
 
 Vereceğimiz bir sonraki bilgi kullanacağımız cihaz özellikleri olacak. Bunlar
 geçen bölümde  `vkGetPhysicalDeviceFeatures` aracılığıyla desteğini
-sorguladığımız geometri gölgeleyicileri gibi özellikler. Şimdilik özel bir şeye
+sorguladığımız geometri gölgelendirici gibi özellikler. Şimdilik özel bir şeye
 ihtiyacımız yok, sadece tanımlayıp her şeyi `VK_FALSE` yapabiliriz. Vulkan'la
 daha ilginç şeyler yapmaya başladığımızda bu structa tekrar döneceğiz.
 

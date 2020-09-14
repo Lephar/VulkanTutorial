@@ -21,7 +21,7 @@ mimarilerine eşlemek gerekiyordu. Oyun performanslarını artırmak için sıkl
 sürücü güncellemeleri olması ve bunlardan bazılarının performansı çok ciddi
 şekilde artırmasının sebebi de tam olarak bu. Sürücülerin bu denli karmaşık
 olmasından dolayı geliştiriciler de çoğu zaman farklı üreticiler arasındaki
-tutarsızlıklarla baş etmek zorunda kalıyordu. [Gölgeleyiciler](https://en.wikipedia.org/wiki/Shader)
+tutarsızlıklarla baş etmek zorunda kalıyordu. [Gölgelendiriciler](https://en.wikipedia.org/wiki/Shader)
 tarafından kabul edilen sözdizimlerinin farklılıkları buna güzel bir örnek.
 Eklenen yeni özelliklerin yanı sıra, geçtiğimiz yıllarda güçlü grafik
 donanımlarına sahip mobil cihazların sayısında da ciddi bir artış yaşandı.
@@ -36,7 +36,7 @@ Vulkan tüm bu problemleri, modern grafik mimarilerine göre sıfırdan tasarlan
 için çözüyor. Programcıya daha detaylı bir API sunup niyetini daha rahat
 anlatmasına izin vererek, sürücüyü fazlalık yüklerden kurtarıyor. Birden fazla
 iş parçacığının eş zamanlı olarak komut göndermesine olanak sağlıyor. Standart
-bir bayt kodu formatı ve derleyicisi getirerek, gölgeleyici derlemelerindeki
+bir bayt kodu formatı ve derleyicisi getirerek, gölgelendirici derlemelerindeki
 tutarsızlıklardan kurtarıyor. Ve son olarak, modern grafik kartlarının grafik
 işlemleri dışındaki kullanımlarını da göz önünde bulundurarak, grafik ve
 hesaplama işlevlerinin hepsini tek bir çatı altında birleştiriyor.
@@ -134,11 +134,11 @@ bağlama işlemini `VkFramebuffer` gerçekleştirecek.
 
 Vulkan'da grafik boru hattı, bir `VkPipeline` nesnesi oluşturularak kurulur.
 Ekran kartının yapılandırılabilir durumları burada belirlenir. Görüntü kapısı
-boyutu, derinlik arabelleği işlemleri ve `VkShaderModule` (gölgeleyici modülü)
-kullanan programlanabilir durumlar bunların en net örnekleri. `VkShaderModule`
-nesneleri, gölgeleyici bayt kodundan oluşturulur. Ayrıca sürücü, boru hattında
-hangi çizim hedeflerinin kullanılacağını da bilmeli, bunu da çizim geçişinin
-referansını vererek belirliyoruz.
+boyutu, derinlik arabelleği işlemleri ve `VkShaderModule` (gölgelendirici
+modülü) kullanan programlanabilir durumlar bunların en net örnekleri.
+`VkShaderModule` nesneleri, gölgelendirici bayt kodundan oluşturulur. Ayrıca
+sürücü, boru hattında hangi çizim hedeflerinin kullanılacağını da bilmeli, bunu
+da çizim geçişinin referansını vererek belirliyoruz.
 
 Vulkan'ın diğer API'lara karşı en öne çıkan özelliklerinden biri, boru hattının
 neredeyse tüm yapılandırılmasının önceden halledilmesi gerekmesi. Bu sebeple,
@@ -203,9 +203,9 @@ buffers) oluşturma ve doku resimlerini (texture images) yükleme gibi birçok a
 daha içeriyor. Bunların hepsine akabindeki bölümlerde değinilecek olsa da biz en
 başta kolaydan başlayacağız. Zaten Vulkan yeterince dik bir öğrenme eğrisine
 sahipken işleri daha baştan zorlaştırmanın gereği yok. Hatta başlangıçta bir
-verteks arabelleği kullanmak yerine koordinatları verteks gölgeleyicisine gömmek
-gibi hilelere bile başvuracağız. Çünkü verteks arabelleklerini yönetmek için
-komut arabelleklerine de biraz aşina olmak gerekiyor.
+verteks arabelleği kullanmak yerine koordinatları verteks gölgelendiriciye
+gömmek gibi hilelere bile başvuracağız. Çünkü verteks arabelleklerini yönetmek
+için komut arabelleklerine de biraz aşina olmak gerekiyor.
 
 Yani kısaca ilk üçgenimizi çizmek için şunları yapacağız:
 
