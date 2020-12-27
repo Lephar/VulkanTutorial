@@ -326,14 +326,28 @@ VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
 ```
 
 Takas ölçüsü, takas zincirindeki resimlerin çözünürlüğüdür ve neredeyse her
-zaman üzerine çizim yaptığımız pencerenin çözünürlüğüne eşittir. Mümkün olan
-çözünürlük aralığı `VkSurfaceCapabilitiesKHR` strunctında tanımlıdır. Vulkan
-bize, `currentExtent` değişkenindeki genişlik ve yükseklik boyutlarına uyarak
-pencerenin çözünürlüğüne uymamızı söylüyor. Ama bazı pencere yöneticileri,
-`currentExtent`'teki özel bir değer ile, başka değerler kullanabileceğimizi
-belirtebilir, bu özel değer de `uint32_t`'nin alabileceği en büyük değerdir. Bu
-durumda `minImageExtent` ve `maxImageExtent` aralığında penceremizin
-çözünürlüğüne en çok uyan değeri seçeceğiz.
+zaman (birazdan daha ayrıntılı açıklanacak olan) _iç piksellerine_ çizim
+yaptığımız pencerenin çözünürlüğüne eşittir. Mümkün olan çözünürlük aralığı
+`VkSurfaceCapabilitiesKHR` structında tanımlıdır. Vulkan bize, `currentExtent`
+değişkenindeki genişlik ve yükseklik boyutlarına uyarak pencerenin çözünürlüğüne
+uymamızı söylüyor. Ama bazı pencere yöneticileri, `currentExtent`'teki özel bir
+değer ile, başka değerler kullanabileceğimizi belirtebilir, bu özel değer de
+`uint32_t`'nin alabileceği en büyük değerdir. Bu durumda `minImageExtent` ve
+`maxImageExtent` aralığında penceremizin çözünürlüğüne en çok uyan değeri
+seçeceğiz. Ancak çözünürlüğü doğru birimle ifade etmeliyiz.
+
+GLFW boyutları ölçerken iki farklı birim kullanıyor: pikseller ve [ekran koordinatları](https://www.glfw.org/docs/latest/intro_guide.html#coordinate_systems).
+Örneğin pencereyi oluştururken verdiğimiz `{WIDTH, HEIGHT}` biçimindeki
+çözünürlük ekran koordinatları biriminde. Ama Vulkan birim olarak pikselleri
+kullanıyor, bu neden takas zinciri ölçüsü de piksellerle ifade edilmeli. Ne
+yazık ki yüksek DPI'a (inç başına nokta) sahip bir ekran (Apple'ın Retina
+ekranları gibi) kullanıyorsanız, ekran koordinatları ile pikseller biribine
+denk gelmez. Yüksek piksel yoğunluğundan dolayı, pencerenin piksel birimli
+çözünürlüğü, ekran koordinatı birimli çözünürlüğünden yüksek olacaktır. Yani
+Vulkan bizim için takas ölçüsünü düzeltmiyorsa, orijinal `{WIDTH, HEIGHT}`
+ikilisi kullanamayız. Bunun yerine `glfwGetFramebufferSize` ile pencerenin
+çözünürlüğünü piksel bazında sorgulayıp bunu minimum ve maksimum resim ölçüsüyle
+eşleştirmeliyiz.
 
 ```c++
 #include <cstdint> // Necessary for UINT32_MAX
@@ -344,7 +358,13 @@ VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
     if (capabilities.currentExtent.width != UINT32_MAX) {
         return capabilities.currentExtent;
     } else {
-        VkExtent2D actualExtent = {WIDTH, HEIGHT};
+        int width, height;
+        glfwGetFramebufferSize(window, &width, &height);
+
+        VkExtent2D actualExtent = {
+            static_cast<uint32_t>(width),
+            static_cast<uint32_t>(height)
+        };
 
         actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
         actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));

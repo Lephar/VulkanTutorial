@@ -460,13 +460,11 @@ ile oluşturacağız. Aynı amaç için geliştirilmiş [SDL](https://www.libsdl
 gibi kütüphaneler de mevcut ama GLFW kullanarak pencere oluşturmanın yanı sıra
 Vulkan'a özel bir takım platform bağımlı şeyleri de soyutlayabileceğiz.
 
-macOS'te GLFW yüklemek için Homebrew paket yöneticisini kullanacağız. macOS'te
-Vulkan desteği bu metnin yazıldığı zamanki stabil versiyon olan 3.2.1 için halen
-tamamlanmış değil. Bu yüzden `glfw3` paketi aracılığıyla son versiyonu
-kuracağız:
+macOS'e GLFW kurmak için Homebrew paket yöneticisini kullanarak `glfw` paketini
+yükleyeceğiz:
 
 ```bash
-brew install glfw3 --HEAD
+brew install glfw
 ```
 
 ### GLM
