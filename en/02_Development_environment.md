@@ -213,7 +213,7 @@ utilities to test whether your machine is Vulkan-capable:
 
 * `sudo apt install vulkan-tools`: Command-line utilities, most importantly `vulkaninfo` and `vkcube`. Run these to confirm your machine supports Vulkan.
 * `sudo apt install libvulkan-dev`: Installs Vulkan loader. The loader looks up the functions in the driver at runtime, similarly to GLEW for OpenGL - if you're familiar with that.
-* `sudo apt install vulkan-validationlayers-dev`: Installs the standard validation layers. These are crucial when debugging Vulkan applications, and we'll discuss them in the upcoming chapter.
+* `sudo apt install vulkan-validationlayers-dev spirv-tools`: Installs the standard validation layers and required SPIR-V tools. These are crucial when debugging Vulkan applications, and we'll discuss them in the upcoming chapter.
 
 If installation was successful, you should be all set with the Vulkan portion.
 Remember to run `vkcube` and ensure you see the following pop up in a window:
@@ -438,21 +438,12 @@ have some executable files that will run a few demos using the SDK. Run the
 
 ### GLFW
 
-As mentioned before, Vulkan by itself is a platform agnostic API and does not
-include tools for creation a window to display the rendered results. We'll use
-the [GLFW library](http://www.glfw.org/) to create a window, which supports
-Windows, Linux and MacOS. There are other libraries available for this purpose,
-like [SDL](https://www.libsdl.org/), but the advantage of GLFW is that it also
-abstracts away some of the other platform-specific things in Vulkan besides just
-window creation.
+As mentioned before, Vulkan by itself is a platform agnostic API and does not include tools for creation a window to display the rendered results. We'll use the [GLFW library](http://www.glfw.org/) to create a window, which supports Windows, Linux and MacOS. There are other libraries available for this purpose, like [SDL](https://www.libsdl.org/), but the advantage of GLFW is that it also abstracts away some of the other platform-specific things in Vulkan besides just window creation.
 
-To install GLFW on MacOS we will use the Homebrew package manager. Vulkan
-support for MacOS is still not fully available on the current (at the time of
-this writing) stable version 3.2.1. Therefore we will install the latest version
-of the `glfw3` package using:
+To install GLFW on MacOS we will use the Homebrew package manager to get the `glfw` package:
 
 ```bash
-brew install glfw3 --HEAD
+brew install glfw
 ```
 
 ### GLM
