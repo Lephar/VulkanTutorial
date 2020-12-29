@@ -1,22 +1,24 @@
-The older graphics APIs provided default state for most of the stages of the
-graphics pipeline. In Vulkan you have to be explicit about everything, from
-viewport size to color blending function. In this chapter we'll fill in all of
-the structures to configure these fixed-function operations.
+Eski grafik API'ları, grafik boru hattının çoğu aşaması için varsayılan bir
+durum sağlamaktaydı. Vulkan'da her şey elle belirlenmeli, görüntü kapısı
+(viewport) boyutundan renk karıştırma fonksiyonuna kadar her şey. Bu bölümde
+sabit fonksiyon operasyonları için gereken structların her birini dolduracağız.
 
-## Vertex input
+## Verteks girdisi
 
-The `VkPipelineVertexInputStateCreateInfo` structure describes the format of the
-vertex data that will be passed to the vertex shader. It describes this in
-roughly two ways:
+`VkPipelineVertexInputStateCreateInfo` structı, verteks gölgelendiricisine
+gönderilecek olan verteks verisinin formatını betimler. Bunu kabaca şu iki yolla
+açıklar:
 
-* Bindings: spacing between data and whether the data is per-vertex or
-per-instance (see [instancing](https://en.wikipedia.org/wiki/Geometry_instancing))
-* Attribute descriptions: type of the attributes passed to the vertex shader,
-which binding to load them from and at which offset
+* Bağlantılar (bindings): veriler arasındaki aralık ve verinin verteks başına mı
+yoksa örnek (bkz. [örnekleme](https://en.wikipedia.org/wiki/Geometry_instancing))
+başına mı olduğu bilgisi
+* Nitelik (attribute) tanımları: verteks gölgelendiricisine aktarılacak olan
+niteliklerin tipleri, bunların hangi bağlantıdan yükleneceği ve hangi ofset ile
+yükleneceği
 
-Because we're hard coding the vertex data directly in the vertex shader, we'll
-fill in this structure to specify that there is no vertex data to load for now.
-We'll get back to it in the vertex buffer chapter.
+Verteks verisini, direkt olarak verteks gölgelendiricisine gömdüğümüz için bu
+structı, yüklenecek bir verteks verisi olmadığını belirtecek şekilde
+dolduracağız. Verteks arabelleği bölümünde buna tekrar döneceğiz.
 
 ```c++
 VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
@@ -27,36 +29,39 @@ vertexInputInfo.vertexAttributeDescriptionCount = 0;
 vertexInputInfo.pVertexAttributeDescriptions = nullptr; // Optional
 ```
 
-The `pVertexBindingDescriptions` and `pVertexAttributeDescriptions` members
-point to an array of structs that describe the aforementioned details for
-loading vertex data. Add this structure to the `createGraphicsPipeline` function
-right after the `shaderStages` array.
+`pVertexBindingDescriptions` ve `pVertexAttributeDescriptions` elemanları,
+verteks verisini yüklemek için gereken az önce bahsettiğimiz yapıların
+tanımlarını içeren bir struct dizisine işaret eder. Bu structı
+`createGraphicsPipeline` fonksiyonunda `shaderStages` dizisinin hemen ardına
+ekleyin.
 
-## Input assembly
+## Girdi birleştirme
 
-The `VkPipelineInputAssemblyStateCreateInfo` struct describes two things: what
-kind of geometry will be drawn from the vertices and if primitive restart should
-be enabled. The former is specified in the `topology` member and can have values
-like:
+`VkPipelineInputAssemblyStateCreateInfo` structı iki şeyi belirler:
+vertekslerden ne tür geometriler çizilecek ve piritif tipler baştan
+başlatılabilecek mi. İlki `topology` elemanı ile belirlenir ve aşağıdaki gibi
+değerler alabilir:
 
-* `VK_PRIMITIVE_TOPOLOGY_POINT_LIST`: points from vertices
-* `VK_PRIMITIVE_TOPOLOGY_LINE_LIST`: line from every 2 vertices without reuse
-* `VK_PRIMITIVE_TOPOLOGY_LINE_STRIP`: the end vertex of every line is used as
-start vertex for the next line
-* `VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST`: triangle from every 3 vertices without
-reuse
-* `VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP `: the second and third vertex of every
-triangle are used as first two vertices of the next triangle
+* `VK_PRIMITIVE_TOPOLOGY_POINT_LIST`: verteksleri bağımsız birer nokta olarak
+yorumla
+* `VK_PRIMITIVE_TOPOLOGY_LINE_LIST`: her 2 noktayı bir çizgi olarak yorumla ve
+noktaları tekrar kullanma
+* `VK_PRIMITIVE_TOPOLOGY_LINE_STRIP`: her çizginin bitiş noktasını, bir sonraki
+çizginin başlangıcı olarak yorumla
+* `VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST`: her 3 noktayı bir üçgen olarak yorumla
+ve noktaları tekrar kullanma
+* `VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP `: her üçgenin 2. ve 3. verteksini bir
+sonraki üçgenin 1. ve 2. noktası olarak kullan
 
-Normally, the vertices are loaded from the vertex buffer by index in sequential
-order, but with an *element buffer* you can specify the indices to use yourself.
-This allows you to perform optimizations like reusing vertices. If you set the
-`primitiveRestartEnable`  member to `VK_TRUE`, then it's possible to break up
-lines and triangles in the `_STRIP` topology modes by using a special index of
-`0xFFFF` or `0xFFFFFFFF`.
+Normalde verteksler verteks arabelleğinden sıralı bir şekilde yüklenir ancak
+*eleman arabelleği* aracılığıyla ,kullanmak istediğiniz indisleri kendiniz
+belirleyebilirsiniz. Böylece verteksleri tekrar kullanmak gibi optimizasyonlar
+sağlayabilirsiniz. Eğer `primitiveRestartEnable` elemanına `VK_TRUE` atarsanız
+`_STRIP` topoloji modundaki çizgi ve üçgenleri `0xFFFF` veya `0xFFFFFFFF` gibi
+özel indis değerleri araçılığıyla birbirinden koparabilirsiniz.
 
-We intend to draw triangles throughout this tutorial, so we'll stick to the
-following data for the structure:
+Bu dersler boyunca üçgenler çizmeyi planlıyoruz, bu sebeple de structı aşağıdaki
+şekliyle kullanacağız:
 
 ```c++
 VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
@@ -65,11 +70,11 @@ inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 inputAssembly.primitiveRestartEnable = VK_FALSE;
 ```
 
-## Viewports and scissors
+## Görüntü kapıları ve makaslar
 
-A viewport basically describes the region of the framebuffer that the output
-will be rendered to. This will almost always be `(0, 0)` to `(width, height)`
-and in this tutorial that will also be the case.
+Görüntü kapısı temel olarak çıktının çizileceği kare arabelleği üzerindeki bir
+alanı beirtir. Bu hemen her zaman `(0, 0)` ile `(width, height)` aralığında
+olur. Biz de bu derslerde bu şekilde kullanacağız.
 
 ```c++
 VkViewport viewport{};
@@ -81,22 +86,22 @@ viewport.minDepth = 0.0f;
 viewport.maxDepth = 1.0f;
 ```
 
-Remember that the size of the swap chain and its images may differ from the
-`WIDTH` and `HEIGHT` of the window. The swap chain images will be used as
-framebuffers later on, so we should stick to their size.
+Takas zincirinin ve resimlerinin boyutlarının, pencerenin `WIDTH` ve `HEIGHT`
+değerlerinden farklı olabileceğini unutmayın. Daha sonra kare arabelleği olarak
+takas zinciri resimleri kullanılacağından, bunların boyutuna sadık kalmalıyız.
 
-The `minDepth` and `maxDepth` values specify the range of depth values to use
-for the framebuffer. These values must be within the `[0.0f, 1.0f]` range, but
-`minDepth` may be higher than `maxDepth`. If you aren't doing anything special,
-then you should stick to the standard values of `0.0f` and `1.0f`.
+`minDepth` ve `maxDepth` değerleri, kare arabelleği için kullanılacak derinlik
+değerlerinin aralığını belirler. Bu değerler `[0.0f, 1.0f]` aralığında olmalıdır
+ama `minDepth` değeri `maxDepth` değerinden büyük olabilir. Eğer özel bir şey
+yapmıyorsanız standart olan `0.0f` ve `1.0f` değerlerini kullanmalısınız.
 
-While viewports define the transformation from the image to the framebuffer,
-scissor rectangles define in which regions pixels will actually be stored. Any
-pixels outside the scissor rectangles will be discarded by the rasterizer. They
-function like a filter rather than a transformation. The difference is
-illustrated below. Note that the left scissor rectangle is just one of the many
-possibilities that would result in that image, as long as it's larger than the
-viewport.
+Görüntü alanları resimden kare arabelleğine olan dönüşümü belirtirken makas
+dörtgenleri ise piksellerin gerçekte hangi alanda saklanacağını belirtir. Makas
+dörtgenlerinin dışında kalan tüm pikseller, pikselleştirici tarafında çöpe
+atılır. Bir dönüşümden ziyade bir filtre gibi iş görürler. Aşağıdaki görselde
+aradaki fark anlatılmaktadır. Makas dörtgeni görüntü alanından büyük olduğu
+sürece soldaki çıktıyı verebilecek birçok makas dörtgeni olabileceğine dikkat
+edin.
 
 ![](/images/viewports_scissors.png)
 
