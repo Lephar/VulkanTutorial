@@ -105,8 +105,8 @@ edin.
 
 ![](/images/viewports_scissors.png)
 
-In this tutorial we simply want to draw to the entire framebuffer, so we'll
-specify a scissor rectangle that covers it entirely:
+Bu derslerde kare arabelleğinin bütününe çizmek istiyoruz, bu nedenle tamamını
+kapsayan bir makas tanımlayacağız:overs it entirely:
 
 ```c++
 VkRect2D scissor{};
@@ -114,11 +114,12 @@ scissor.offset = {0, 0};
 scissor.extent = swapChainExtent;
 ```
 
-Now this viewport and scissor rectangle need to be combined into a viewport
-state using the `VkPipelineViewportStateCreateInfo` struct. It is possible to
-use multiple viewports and scissor rectangles on some graphics cards, so its
-members reference an array of them. Using multiple requires enabling a GPU
-feature (see logical device creation).
+Şimdi bu görüntü alanı ve makas dörtgeni `VkPipelineViewportStateCreateInfo`
+structı kullanılarak tek bir görüntü alanı durumunda birleştirilmeli. Bazı
+grafik kartlarında birden fazla görüntü alanı ve makas karesi kullanmak mümkün,
+bu nedenle struct elemanları bu yapılardan oluşan dizilere referans veriyor.
+Ancak birden fazla kullanmak için bir GPU özelliğini aktifleştirmemiz gerekiyor.
+Daha fazla bilgi için mantıksal aygıt oluşturma bölümüne geri dönebilirsiniz.
 
 ```c++
 VkPipelineViewportStateCreateInfo viewportState{};
@@ -129,15 +130,15 @@ viewportState.scissorCount = 1;
 viewportState.pScissors = &scissor;
 ```
 
-## Rasterizer
+## Pikselleştirici
 
-The rasterizer takes the geometry that is shaped by the vertices from the vertex
-shader and turns it into fragments to be colored by the fragment shader. It also
-performs [depth testing](https://en.wikipedia.org/wiki/Z-buffering),
-[face culling](https://en.wikipedia.org/wiki/Back-face_culling) and the scissor
-test, and it can be configured to output fragments that fill entire polygons or
-just the edges (wireframe rendering). All this is configured using the
-`VkPipelineRasterizationStateCreateInfo` structure.
+Pikselleştirici, verteksler tarafından şekillendirilmiş geometrileri verteks
+gölgelendiriciden alır ve parçacık gölgelendirici tarafından renklendirilmek
+üzere piksellere dönüştürür. Ayrıca [derinlik testi](https://en.wikipedia.org/wiki/Z-buffering),
+[yüz ayırma](https://en.wikipedia.org/wiki/Back-face_culling) ve makas
+testlerini de uygular. Tüm poligonu veya sadece kenarları (wireframe) dolduracak
+şekilde ayarlanabilir. Bu ayarların hepsi
+`VkPipelineRasterizationStateCreateInfo` structı kullanılarak yapılır.
 
 ```c++
 VkPipelineRasterizationStateCreateInfo rasterizer{};
@@ -145,50 +146,50 @@ rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 rasterizer.depthClampEnable = VK_FALSE;
 ```
 
-If `depthClampEnable` is set to `VK_TRUE`, then fragments that are beyond the
-near and far planes are clamped to them as opposed to discarding them. This is
-useful in some special cases like shadow maps. Using this requires enabling a
-GPU feature.
+Eğer `depthClampEnable` değeri `VK_TRUE` olarak belirlenirse yakın ve uzak
+düzlemlerin dışında kalan parçacıklar atılmak yerine bu düzlemlere sıkıştırılır.
+Bu gölge haritaları gibi özel durumlar için faydalıdır. Bunu kullanmak da bir
+GPU özelliğini aktifleştirmeyi gerektiriyor.
 
 ```c++
 rasterizer.rasterizerDiscardEnable = VK_FALSE;
 ```
 
-If `rasterizerDiscardEnable` is set to `VK_TRUE`, then geometry never passes
-through the rasterizer stage. This basically disables any output to the
-framebuffer.
+Eğer `rasterizerDiscardEnable` değeri `VK_TRUE` ise, şekiller hiçbir zaman
+pikselleştirme aşamasından geçmez. Yani kısaca kare arabelleğine giden tüm
+çıktılar engellenir.
 
 ```c++
 rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
 ```
 
-The `polygonMode` determines how fragments are generated for geometry. The
-following modes are available:
+`polygonMode` şekillerden parçacıkların nasıl üretileceğini belirler. Seçenekler
+şu şekilde:
 
-* `VK_POLYGON_MODE_FILL`: fill the area of the polygon with fragments
-* `VK_POLYGON_MODE_LINE`: polygon edges are drawn as lines
-* `VK_POLYGON_MODE_POINT`: polygon vertices are drawn as points
+* `VK_POLYGON_MODE_FILL`: poligonun için parçacıklarla doldur
+* `VK_POLYGON_MODE_LINE`: poligonları çizgi şeklinde çiz
+* `VK_POLYGON_MODE_POINT`: poligon vertekslerini nokta olarak çiz
 
-Using any mode other than fill requires enabling a GPU feature.
+Doldurma dışındaki modlar GPU özelliği aktifleştirmeyi gerektirir.
 
 ```c++
 rasterizer.lineWidth = 1.0f;
 ```
 
-The `lineWidth` member is straightforward, it describes the thickness of lines
-in terms of number of fragments. The maximum line width that is supported
-depends on the hardware and any line thicker than `1.0f` requires you to enable
-the `wideLines` GPU feature.
+`lineWidth` alanı, çizgilenir piksel bazında kalınlıklarını belirtir.
+Desteklenen maksimum çizgi kalınlığı donanıma bağlıdır ve `1.0f`'dan daha büyük
+değerler için `wideLines` GPU özelliğinin etkinleştirilmesi gerekir.
 
 ```c++
 rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
 rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
 ```
 
-The `cullMode` variable determines the type of face culling to use. You can
-disable culling, cull the front faces, cull the back faces or both. The
-`frontFace` variable specifies the vertex order for faces to be considered
-front-facing and can be clockwise or counterclockwise.
+`cullMode` değişkeni, kullanılacak yüz ayırma tipini belirler. Yüz ayırmayı
+tamamen kapatabilirsiniz, ön yüzleri veya arka yüzleri ayırabilirsiniz, veya
+tüm yüzleri ayırmayı seçebilirsiniz. `frontFace` değişkeni, bir yüzün ön yüz
+olarak sayılması için gereken verteks sırasını belirler. Alabileceği değerler
+saat yönü ve saat yönünün tersidir.
 
 ```c++
 rasterizer.depthBiasEnable = VK_FALSE;
@@ -197,9 +198,10 @@ rasterizer.depthBiasClamp = 0.0f; // Optional
 rasterizer.depthBiasSlopeFactor = 0.0f; // Optional
 ```
 
-The rasterizer can alter the depth values by adding a constant value or biasing
-them based on a fragment's slope. This is sometimes used for shadow mapping, but
-we won't be using it. Just set `depthBiasEnable` to `VK_FALSE`.
+Pikselleştici, sabit bir değer ekleyerek veya parçacığın eğimine göre bir sapma
+belirleyerek derinlik değerlerini değiştirebilir. Bu bazı durumlarda gölge
+haritalandırması için kullanlabilir ama şimdilik biz kullanmayacağız.
+`depthBiasEnable` değerini `VK_FALSE` olarak belirleyip geçelim.
 
 ## Multisampling
 
