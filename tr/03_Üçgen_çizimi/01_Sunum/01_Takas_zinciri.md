@@ -351,6 +351,7 @@ eşleştirmeliyiz.
 
 ```c++
 #include <cstdint> // Necessary for UINT32_MAX
+#include <algorithm> // Necessary for std::min/std::max
 
 ...
 
@@ -375,8 +376,7 @@ VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
 ```
 
 `max` ve `min` fonksiyonları `WIDTH` ve `HEIGHT` değerlerini, izin verilen en
-büyük ve en küçük ölçü aralığına sıkıştırmamıza yarıyor. Bunları kullanmak için
-`<algorithm>` headerını eklemeyi de unutmayın.
+büyük ve en küçük ölçü aralığına sıkıştırmamıza yarıyor.
 
 ## Takas zincirinin oluşturulması
 

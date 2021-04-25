@@ -43,6 +43,17 @@ olmaz. GLFW bizim için `glfwCreateWindowSurface` fonksiyonuyla platform
 farklılıklarını hallediyor. Yine de buna bel bağlamadan önce arka planda ne
 yaptığını bilmekte fayda var.
 
+Yerel platform fonksiyonlarına erişmek için en üstteki include direktiflerini
+aşağıdaki şekilde güncellemelisiniz:
+
+```c++
+#define VK_USE_PLATFORM_WIN32_KHR
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h>
+```
+
 Pencere yüzeyi bir Vulkan objesi olduğundan doldurulması gereken
 `VkWin32SurfaceCreateInfoKHR` adlı bir structla beraber geliyor. İki önemli
 parametresi var: `hwnd` ve `hinstance`. Bunlar pencere ve işlem işleyicileri.
