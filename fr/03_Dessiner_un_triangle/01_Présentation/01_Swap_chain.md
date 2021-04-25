@@ -1,6 +1,6 @@
 Vulkan ne possède pas de concept comme le framebuffer par défaut, et nous devons donc créer une infrastructure qui
-contiendra les buffers sur lesquels nous effectuerons les rendus avant de la présentation à l'écran. Cette
-infrastructure s'appelle _swap chain_ sur Vulkan et doit être crée explicitement. La swap chain est essentiellement
+contiendra les buffers sur lesquels nous effectuerons les rendus avant de les présenter à l'écran. Cette
+infrastructure s'appelle _swap chain_ sur Vulkan et doit être créée explicitement. La swap chain est essentiellement
 une file d'attente d'images attendant d'être affichées. Notre application devra récupérer une des images de la file,
 dessiner dessus puis la retourner à la file d'attente. Le fonctionnement de la file d'attente et les conditions de la
 présentation dépendent du paramétrage de la swap chain. Cependant, l'intérêt principal de la swap chain est de
@@ -11,7 +11,7 @@ synchroniser la présentation avec le rafraîchissement de l'écran.
 Toutes les cartes graphiques ne sont pas capables de présenter directement les images à l'écran, et ce pour
 différentes raisons. Ce pourrait être car elles sont destinées à être utilisées dans un serveur et n'ont aucune
 sortie vidéo. De plus, dans la mesure où la présentation est très dépendante du gestionnaire de fenêtres et de la
-surface, la swap chain ne fait pas partie de Vulkan "core". Il faudra donc utiliser des extensions, dont 
+surface, la swap chain ne fait pas partie de Vulkan "core". Il faudra donc utiliser des extensions, dont
 `VK_KHR_swapchain`.
 
 Pour cela nous allons modifier `isDeviceSuitable` pour qu'elle vérifie si cette extension est supportée. Nous avons
@@ -144,7 +144,7 @@ if (formatCount != 0) {
 }
 ```
 
-Finalement, récupérer les modes de présentation supportés suit le même principe et utilise 
+Finalement, récupérer les modes de présentation supportés suit le même principe et utilise
 `vkGetPhysicalDeviceSurfacePresentModesKHR` :
 
 ```c++
@@ -191,7 +191,7 @@ nous rabattrons sur ce qui nous restera de mieux.
 
 ### Format de la surface
 
-La fonction utilisée pour déterminer ce paramètre commence ainsi. Nous lui passerons en argument le membre donnée 
+La fonction utilisée pour déterminer ce paramètre commence ainsi. Nous lui passerons en argument le membre donnée
 `formats` de la structure `SwapChainSupportDetails`.
 
 ```c++
@@ -206,7 +206,7 @@ nous stockons les canaux de couleur R, G, B et A dans cet ordre et en entiers no
 de vérifier que le sRGB est supporté en utilisant le champ de bits `VK_COLOR_SPACE_SRGB_NONLINEAR_KHR`.
 
 Pour l'espace de couleur nous utiliserons sRGB si possible, car il en résulte
-[un rendu plus réaliste](http://stackoverflow.com/questions/12524623/). Le format le plus commun est 
+[un rendu plus réaliste](http://stackoverflow.com/questions/12524623/). Le format le plus commun est
 `VK_FORMAT_B8G8R8A8_SRGB`.
 
 Itérons dans la liste et voyons si le meilleur est disponible :
@@ -291,11 +291,16 @@ Le swap extent donne la résolution des images dans la swap chain et correspond 
 la fenêtre que nous utilisons. L'étendue des résolutions disponibles est définie dans la
 structure `VkSurfaceCapabilitiesKHR`. Vulkan nous demande de faire correspondre notre résolution à celle de la fenêtre
 fournie par le membre `currentExtent`. Cependant certains gestionnaires de fenêtres nous permettent de choisir une
-résolution différente, ce qui nous pouvons détecter car alors les membres `width` et `height` sont égaux à la plus
+résolution différente, ce que nous pouvons détecter grâce aux membres `width` et `height` qui sont alors égaux à la plus
 grande valeur d'un `uint32_t`. Dans ce cas nous choisirons la résolution correspondant le mieux à la taille de la
 fenêtre, dans les bornes de `minImageExtent` et `maxImageExtent`.
 
 ```c++
+#include <cstdint> // UINT32_MAX
+#include <algorithm> // std::min/std::max
+
+...
+
 VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
     if (capabilities.currentExtent.width != UINT32_MAX) {
         return capabilities.currentExtent;
@@ -311,7 +316,7 @@ VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
 ```
 
 Les fonctions `min` et `max` sont utilisées ici pour limiter les valeurs `WIDTH` et `HEIGHT` entre le minimum et le
-maximum supportés par l'implémentation. Incluez `<algorithm>` pour les utiliser.
+maximum supportés par l'implémentation.
 
 ## Création de la swap chain
 
@@ -389,7 +394,7 @@ Le membre `imageArrayLayers` indique le nombre de couches que chaque image poss�
 développez une application stéréoscopique 3D. Le champ de bits `imageUsage` spécifie le type d'opérations que nous
 appliquerons aux images de la swap chain. Dans ce tutoriel nous effectuerons un rendu directement sur les images,
 nous les utiliserons donc comme *color attachement*. Vous voudrez peut-être travailler sur une image séparée pour
-pouvoir appliquer des effets en post-processing. Dans ce cas vous devrez utiliser une valeur comme 
+pouvoir appliquer des effets en post-processing. Dans ce cas vous devrez utiliser une valeur comme
 `VK_IMAGE_USAGE_TRANSFER_DST_BIT` à la place et utiliser une opération de transfert de mémoire pour placer le
 résultat final dans une image de la swap chain.
 
@@ -473,7 +478,7 @@ if (vkCreateSwapchainKHR(device, &createInfo, nullptr, &swapChain) != VK_SUCCESS
 ```
 
 Les paramètres sont le logical device, la structure contenant les informations, l'allocateur optionnel et la variable
-contenant la référence à la swap chain. Cet objet devra être explicitement détruit à l'aide de la fonction 
+contenant la référence à la swap chain. Cet objet devra être explicitement détruit à l'aide de la fonction
 `vkDestroySwapchainKHR` avant de détruire le logical device :
 
 ```c++
@@ -502,10 +507,10 @@ stocker :
 std::vector<VkImage> swapChainImages;
 ```
 
-Ces images ont été crées par l'implémentation avec la swap chain et elles seront automatiquement supprimées avec la
+Ces images ont été créées par l'implémentation avec la swap chain et elles seront automatiquement supprimées avec la
 destruction de la swap chain, nous n'aurons donc rien à rajouter dans la fonction `cleanup`.
 
-Ajoutons le code nécessaire à la récupération des références à la fin de `createSwapChain`, juste après l'appel à 
+Ajoutons le code nécessaire à la récupération des références à la fin de `createSwapChain`, juste après l'appel à
 `vkCreateSwapchainKHR`. Comme notre logique n'a au final informé Vulkan que d'un minimum pour le nombre d'images dans la
 swap chain, nous devons nous enquérir du nombre d'images avant de redimensionner le conteneur.
 
