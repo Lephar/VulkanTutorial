@@ -208,10 +208,10 @@ hazırsınız!
 
 ## Linux
 
-Bu kısım Ubuntu kullanıcılarına göre hazırlanmıştır ama `apt` komutlarını
-dağıtımınızın paket yöneticisine göre değiştirerek kendinize uygun hale
-getirebilirsiniz. Ayrıca C++17 destekli bir de derleyiciye (GCC 7+ veya Clang
-5+) ve make'e ihtiyacınız olacak.
+Bu yönergeler Ubuntu ve Fedora kullanıcılarını hedef alacak şekilde
+hazırlanmıştır ancak `apt` ve `dnf` komutlarını dağıtımınızın paket yöneticisine
+göre değiştirerek kendinize uygun hale getirebilirsiniz. Ayrıca C++17 destekli
+bir de derleyiciye (GCC 7+ veya Clang 5+) ve make'e ihtiyacınız olacak.
 
 ### Vulkan Paketleri
 
@@ -275,7 +275,8 @@ En popüler iki gölgelendirici derleyicisi Khronos Grup'un `glslangValidator`'�
 ve Google'ın `glslc` programı. İkincisi GCC ve Clang benzeri bir kullanıma sahip
 olduğundan bunu kullanacağız. Google'ın [resmi olmayan binary dosyalarını](https://github.com/google/shaderc/blob/main/downloads.md)
 indirin ve `glslc` dosyasını `/usr/local/bin` klasörünüze taşıyın. Yetkilerinize
-göre `sudo` komutuna ihtiyacınız olabileceğini unutmayın. `glslc` komutunu
+göre `sudo` komutuna ihtiyacınız olabileceğini unutmayın. Fedora'da
+`sudo dnf install glslc` komutunu kullanarak yükleyin. `glslc`komutunu
 çalıştırarak programı test edebilirsiniz, parametre göndermediğimiz için haklı
 olarak hata verecektir:
 
